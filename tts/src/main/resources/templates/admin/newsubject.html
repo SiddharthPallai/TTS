@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Courses</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <script src="/js/tts.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<meta charset="ISO-8859-1">
+<title>Add Subjects</title>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<form autocomplete="off" action="#" th:action="@{/course/subject/add}"
+					th:object="${subject}" method="post" class="form-horizontal"
+					role="form">
+					<h4>Add Subjects for course: <span th:utext="${courseName}"></span></h4>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Semester:
+							<select class="form-control" th:field="*{id}">
+								<option disabled="disabled" value="0">--Semester--</option>
+							    <option th:each="sem : ${semesters}" th:value="${sem.id}" th:utext="'Semester-' + ${sem.semnum}">..
+							    </option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Subject:
+							<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                               class="validation-message"></label>
+                        		<input type="text" th:field="*{name}" placeholder="Subject Name" class="form-control"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Short-name:
+							<label th:if="${#fields.hasErrors('shortName')}" th:errors="*{shortName}"
+                               class="validation-message"></label>
+                        		<input type="text" th:field="*{shortName}" placeholder="Subject short-name" class="form-control"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Subject Code:
+							<label th:if="${#fields.hasErrors('code')}" th:errors="*{code}"
+                               class="validation-message"></label>
+                        		<input type="text" th:field="*{code}" placeholder="Subject Code" class="form-control"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Lab or Theory:
+							<select class="form-control" th:field="*{type}">
+									<option th:value="'0'" th:text="LAB"></option>
+   									<option th:value="'1'" th:text="THEORY"></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Faculty In-charge :
+							<select class="form-control" th:field="*{faculty.id}">
+								<option disabled="disabled" value="0">--Faculty--</option>
+							    <option th:each="f : ${facs}" th:value="${f.id}" th:utext="${f.firstName}">
+							    </option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block">Add</button>
+                    </div>
+                	</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>New Timetable</title>
+<link rel="stylesheet" type="text/css"	th:href="@{/css/registration.css}" />
+
+<link rel="stylesheet"	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/tts.js"></script>
+<style>
+#tab {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#tab td, #tab th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    align: center;
+}
+
+#tab td:hover {background-color: #ddd;}
+</style>
+
+</head>
+<body>
+	<a class="navbar-brand" href="#" th:href="@{/admin/home}">Home</a>
+	<form th:action="@{/logout}" method="get" action="">
+		<button class="btn btn-md btn-danger btn-block" name="registration"
+			type="Submit">Logout</button>
+	</form>
+
+	<div class="container">
+			<div class="form-group row">
+				<select class="form-control" id="crs" title="Pick Course &amp; Semester">
+					<option disabled="disabled" selected="selected">Pick Course & Semester</option>
+					<optgroup th:each="course : ${courses}" th:label="${course.name}"
+						label="">
+						<option th:if="${sem.active == 0}"
+							th:each="sem : ${course.semesters}" th:value="${sem.id}"
+							th:text="'Semester-' + ${sem.semnum}">
+						</option>
+					</optgroup>
+				</select>
+			</div>
+		</div>
+	<div class="container">
+	    <h3 id="tablehead"></h3>
+		<table id="tab" border="1" class="table table-striped table-bordered table-hover table-condensed" >
+
+        </table>
+	<!-- div th:if="${not #lists.isEmpty(periods)}">
+        <h1>....</h1>
+        <table class="table table-striped">
+        	<tr>
+	        	<td></td>
+	        	<td th:each="period : ${periods}">
+	        		<span th:text="${#calendars.format(period.starttime, 'HH:mm')} + '~' +${#calendars.format(period.endtime, 'HH:mm')}"></span>
+	        	</td>
+        	</tr>
+        	<tr th:each="day : ${days}">        		
+        		<td th:text="${day.dayName}"/>
+        		<td th:each="period : ${periods}"/>        		
+        	</tr>
+        </table>
+    </div -->
+</div>
+
+</body>
+<script type="text/javascript">
+$( document ).ready(function() {
+	
+	// GET REQUEST
+	$("#crs").change(function(event){
+		event.preventDefault();
+		var semesterName = $("#crs option:selected").text();
+		var semesterId = $('#crs').val(); 
+	    var courseName = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+		ajaxGet(semesterId,semesterName,courseName);
+	});
+	// DO GET
+	function ajaxGet(semesterId,semesterName,courseName){
+		$.ajax({
+			type : "GET",
+			url : "renderTable",
+			success: function(result){
+				if(result.status == "Done"){
+					var tbl = document.getElementById('tab');
+
+					console.log("Success: ", result);
+					$('#tab').empty();
+					$("tr:has(td)").remove();
+					$("tr:has(th)").remove();
+					$('#tablehead').empty();
+					$('#tablehead').append(courseName + '-' + semesterName);
+					var tags = '<tr align="center"><th align="center">#</th>';
+					// get each period
+					$.each(result.data1, function(i, period){
+						tags += '<th align="center">' + period.formattedTimeRange + '</th>';
+					});
+					tags += '</tr>';
+					// get each day
+					$.each(result.data2, function(i, day){
+						tags += '<tr align="center"><th  align="center">' + day.dayName + '</th>';
+					
+						$.each(result.data1, function(i, period){
+							//tags += '<td>' + '<a href="/timetable/addLecture?sem='+semesterId+'&day='+day.id+'&period='+period.id+'" onclick="basicPopup(this.href,500,500);return false">Add</a>' + '</td>';
+							tags += '<td>' + '<a href="/timetable/addLecture?sem='+semesterId+'&day='+day.id+'&period='+period.id+'" onclick="basicPopup(this.href,500,500);return false">Add</a>' + '</td>';
+						});
+						tags += '</tr>';
+					});
+					$('#tab').append(tags);
+				}else{
+					console.log("Fail: ", result);
+				}
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			}
+		});	
+	}
+})
+</script>
+</html>

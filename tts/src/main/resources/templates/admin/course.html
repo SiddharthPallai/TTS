@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Courses</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <script src="/js/tts.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<body>
+<a class="navbar-brand" href="#" th:href="@{/admin/home}">Home</a>
+    <form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger btn-block" name="registration"
+                type="Submit">Logout
+        </button>
+    </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form autocomplete="off" action="#" th:action="@{/course}"
+                  th:object="${course}" method="post" class="form-horizontal"
+                  role="form">
+                <h2>New Course Form</h2>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                    	Course Name:
+                    	<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                               class="validation-message"></label>
+                        <input type="text" th:field="*{name}" placeholder="Course Name"
+                               class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                    	Total Semester:
+                    	<label th:if="${#fields.hasErrors('semcount')}" th:errors="*{semcount}"
+                               class="validation-message"></label>
+                        <input type="text" th:field="*{semcount}" placeholder="Total Semesters" 
+                        		class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block">Register Course</button>
+                    </div>
+                </div>
+
+                <h3><span class="text-success" th:utext="${successMessage}"></span></h3>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div th:if="${not #lists.isEmpty(courses)}">
+        <h2>Course List</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Course Name</th>
+                <th>Total Semesters</th>
+                <th>Active Semesters</th>
+                <th>Add Subjects</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr th:each="course,rowStat : ${courses}">
+            	<td th:text="${rowStat.count}">1</td>
+            	<td th:text="${course.name}">Course Name</td>
+                <td th:text="${course.semcount}">Total Semesters</td>
+                <td>
+                	<table>
+                	 <tr>
+                	 <td th:each="sem : ${course.semesters}">
+                	    <span class="col-sm-9" th:if= "${sem.active != 0}">
+                	    	<span th:text="${sem.semnum}"></span>
+        				</span>
+        			 </td>
+    				</tr>
+                	</table>                	
+                </td>
+                <td><a th:href="${'/course/subject?courseid='+course.id}" onclick="basicPopup(this.href,500,500);return false" >Subjects</a></td>
+                <td><a th:href="${'/course/edit/' + course.id}">Edit</a></td>
+                <td><a th:href="${'/course/delete/' + course.id}">Delete</a></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

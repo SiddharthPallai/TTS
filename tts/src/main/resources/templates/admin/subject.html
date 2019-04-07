@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Subjects</title>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/registration.css}" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/tts.js"></script>
+<style>
+#tab {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#tab td, #tab th {
+	border: 1px solid #ddd;
+	padding: 8px;
+	align: center;
+}
+
+#tab td:hover {
+	background-color: #ddd;
+}
+</style>
+
+</head>
+<body>
+	<a class="navbar-brand" href="#" th:href="@{/admin/home}">Home</a>
+	<form th:action="@{/logout}" method="get" action="">
+		<button class="btn btn-md btn-danger btn-block" name="registration"
+			type="Submit">Logout</button>
+	</form>
+
+	<!-- div class="container">
+		<div class="form-group row">
+			<select class="form-control" id="crs" title="Pick Semester">
+				<option disabled="disabled" selected="selected">Pick a
+					Semester</option>
+				<optgroup th:each="course : ${courses}" th:label="${course.name}"
+					label="">
+					<option th:if="${sem.active == 0}"
+						th:each="sem : ${course.semesters}" th:value="${sem.id}"
+						th:text="'Semester-' + ${sem.semnum}"></option>
+				</optgroup>
+			</select>
+		</div>
+	</div -->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<form autocomplete="off" action="#"
+					th:action="@{/subject/newSubject}" th:object="${sub}" method="post"
+					class="form-horizontal" role="form">
+					<h2>New Subject Form</h2>
+					<div class="form-group">
+					<div class="col-sm-9">
+						<select class="form-control" id="crs" title="Pick Semester"  th:field="*{semesterId}">
+							<option disabled="disabled" selected="selected" value="">Pick a Semester</option>
+							<optgroup th:each="course : ${courses}" th:label="${course.name}"
+								label="">
+								<option th:if="${sem.active == 0}"
+									th:each="sem : ${course.semesters}" th:value="${sem.id}"
+									th:text="'Semester-' + ${sem.semnum}"></option>
+							</optgroup>
+						</select>
+					</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							Name: <label th:if="${#fields.hasErrors('name')}"
+								th:errors="*{name}" class="validation-message"></label> <input
+								type="text" th:field="*{name}" placeholder="Subject Name"
+								class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							Code: <label th:if="${#fields.hasErrors('code')}"
+								th:errors="*{code}" class="validation-message"></label> <input
+								type="text" th:field="*{code}" placeholder="Subject Code"
+								class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							Short-name: <label th:if="${#fields.hasErrors('shortName')}"
+								th:errors="*{shortName}" class="validation-message"></label> <input
+								type="text" th:field="*{shortName}"
+								placeholder="Subject Shortname" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							Type: <label th:if="${#fields.hasErrors('type')}"
+								th:errors="*{type}" class="validation-message"></label> <select
+								th:field="*{type}" class="form-control" id="crs"
+								title="Pick Subject Type">
+								<option value="">Type</option>
+								<option th:each="entry : ${subTypes.entrySet()}"
+									th:value="${entry.key}" th:utext="${entry.value}"></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							<button type="submit" class="btn btn-primary btn-block">Add
+								Subject</button>
+						</div>
+					</div>
+
+					<h3>
+						<span class="text-success" th:utext="${successMessage}"></span>
+					</h3>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- div class="container">
+    <div th:if="${not #lists.isEmpty(courses)}">
+        <h2>Course List</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Course Name</th>
+                <th>Total Semesters</th>
+                <th>Active Semesters</th>
+                <th>Add Subjects</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr th:each="course,rowStat : ${courses}">
+            	<td th:text="${rowStat.count}">1</td>
+            	<td th:text="${course.name}">Course Name</td>
+                <td th:text="${course.semcount}">Total Semesters</td>
+                <td>
+                	<table>
+                	 <tr>
+                	 <td th:each="sem : ${course.semesters}">
+                	    <span class="col-sm-9" th:if= "${sem.active != 0}">
+                	    	<span th:text="${sem.semnum}"></span>
+        				</span>
+        			 </td>
+    				</tr>
+                	</table>                	
+                </td>
+                <td><a th:href="${'/course/subject?courseid='+course.id}" onclick="basicPopup(this.href,500,500);return false" >Subjects</a></td>
+                <td><a th:href="${'/course/edit/' + course.id}">Edit</a></td>
+                <td><a th:href="${'/course/delete/' + course.id}">Delete</a></td>
+            </tr>
+        </table>
+
+    </div>
+</div-->
+
+</body>
+<script type="text/javascript">
+	/*$( document ).ready(function() {
+	
+	 // GET REQUEST
+	 $("#crs").change(function(event){
+	 event.preventDefault();
+	 var semesterName = $("#crs option:selected").text();
+	 var semesterId = $('#crs').val(); 
+	 var courseName = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+	 ajaxGet(semesterId,semesterName,courseName);
+	 });
+	 // DO GET
+	 function ajaxGet(semesterId,semesterName,courseName){
+	 $.ajax({
+	 type : "GET",
+	 url : "renderTable",
+	 success: function(result){
+	 if(result.status == "Done"){
+	 var tbl = document.getElementById('tab');
+
+	 console.log("Success: ", result);
+	 $('#tab').empty();
+	 $("tr:has(td)").remove();
+	 $("tr:has(th)").remove();
+	 $('#tablehead').empty();
+	 $('#tablehead').append(courseName + '-' + semesterName);
+	 var tags = '<tr align="center"><th align="center">#</th>';
+	 // get each period
+	 $.each(result.data1, function(i, period){
+	 tags += '<th align="center">' + period.formattedTimeRange + '</th>';
+	 });
+	 tags += '</tr>';
+	 // get each day
+	 $.each(result.data2, function(i, day){
+	 tags += '<tr align="center"><th  align="center">' + day.dayName + '</th>';
+	
+	 $.each(result.data1, function(i, period){
+	 //tags += '<td>' + '<a href="/timetable/addLecture?sem='+semesterId+'&day='+day.id+'&period='+period.id+'" onclick="basicPopup(this.href,500,500);return false">Add</a>' + '</td>';
+	 tags += '<td>' + '<a href="/timetable/addLecture?sem='+semesterId+'&day='+day.id+'&period='+period.id+'" onclick="basicPopup(this.href,500,500);return false">Add</a>' + '</td>';
+	 });
+	 tags += '</tr>';
+	 });
+	 $('#tab').append(tags);
+	 }else{
+	 console.log("Fail: ", result);
+	 }
+	 },
+	 error : function(e) {
+	 console.log("ERROR: ", e);
+	 }
+	 });	
+	 }
+	 })*/
+</script>
+</html>

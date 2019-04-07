@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+    <form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger btn-block" name="registration"
+                type="Submit">Logout
+        </button>
+    </form>
+
+    <div class="panel-group" style="margin-top:40px">
+        <div class="panel panel-primary">
+        
+                        
+            <div class="panel-heading">
+                <span th:utext="${userName}"></span>
+                <div th:each="role : ${roles}">
+                        	<span th:utext="${role.role}"></span>
+                </div>
+            </div>        
+            
+            
+            <div class="container">
+                <div class="row"><div class="col-md-10 col-md-offset-10"></div></div>
+                 <form th:action="@{/timetable/new}" method="get">
+	                <div class="col-sm-2">
+	        			<button class="btn btn-primary btn-block" name="course" type="Submit">Create Timetable</button>
+	        		</div>
+    			</form>
+            	<form th:action="@{/schedule}" method="get">
+	                <div class="col-sm-2">
+	        			<button class="btn btn-primary btn-block" name="course" type="Submit">Show/Edit Timetable</button>
+	        		</div>
+    			</form>
+                <form th:action="@{/course}" method="get">
+	                <div class="col-sm-2">
+	        			<button class="btn btn-primary btn-block" name="course" type="Submit">Courses</button>
+	        		</div>
+    			</form>
+    			<form th:action="@{/subject/listSemsAndCourses}" method="get">
+	    			<div class="col-sm-2">
+	        			<button class="btn btn-primary btn-block" name="subject" type="Submit">Subject</button>
+	        		</div>
+    			</form>
+    			<form th:action="@{/faculty/listall}" method="get">
+	    			<div class="col-sm-2">
+	        			<button class="btn btn-primary btn-block" name="faculty" type="Submit">Faculty</button>
+	        		</div>
+    			</form>
+    			<div class="row"><div class="col-md-10 col-md-offset-10"></div></div>
+    			
+            </div>
+            <!-- p class="admin-message-text text-center" th:utext="${adminMessage}"></p -->
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

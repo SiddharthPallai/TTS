@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Course Form</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<a class="navbar-brand" href="#" th:href="@{/admin/home}">Home</a>
+    <form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger btn-block" name="registration"
+                type="Submit">Logout
+        </button>
+    </form>
+
+<div class="container">
+    <div th:if="${not #lists.isEmpty(courses)}">
+        <h2>Course Schedules</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Course Name</th>
+                <th>Total Semesters</th>
+                <th>Running Semesters</th>
+                <th>Show Subject & Faculty</th>
+                <th>Show Timetable</th>
+            </tr>
+            <tr th:each="course,rowStat : ${courses}">
+              	<td th:text="${rowStat.count}">1</td>
+            	<td th:text="${course.name}">Course Name</td>
+                <td th:text="${course.semcount}">Total Semesters</td>
+                <td>
+                	<table>
+                	 <tr>
+                	 <td th:each="sem : ${course.semesters}">
+                	    <span class="col-sm-9" th:if= "${sem.active != 0}">
+                	    	<span th:text="${sem.semnum}"></span>
+        				</span>
+        			 </td>
+    				</tr>
+                	</table>                	
+                </td>               
+				<td th:text="${course.semcount}">Show Subject & Faculty</td> 
+				                <td>
+                	<table>
+                	 <tr>
+                	 <td th:each="sem : ${course.semesters}">
+                	    <span th:if= "${sem.active != 0}">
+                	    <!-- button class="button button2" name="${course.id}:${sem.id}" value="${sem.semnum}" type="Submit"
+                th:text="${sem.semnum}"></button -->
+                <a class="button button2" th:href="${'timetable/show/' + sem.id}"><span th:text="'Sem-'+ ${sem.semnum}"></span></a>
+        				</span>
+        			 </td>
+    				</tr> 
+                	</table>                	
+                </td> 
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
